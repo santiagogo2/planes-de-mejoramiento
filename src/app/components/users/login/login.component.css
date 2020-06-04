@@ -1,0 +1,11 @@
+.loginContainer{
+	margin: auto;
+}
+.marginForm{
+	padding: 30px;
+	box-shadow: 0px 0px 2px grey;
+	border-radius: 10px;
+}
+#preloaderOndas{
+	margin-top: 1.5rem;
+}

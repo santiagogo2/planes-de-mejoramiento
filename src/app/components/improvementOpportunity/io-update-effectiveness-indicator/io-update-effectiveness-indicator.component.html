@@ -1,0 +1,73 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-10 col-lg-9 col-xl-8 marginForm">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">			
+				<div id="preloaderOndas" *ngIf="!opportunity && !errorCode">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<h3 class="centerTitle" *ngIf="errorCode || opportunity">{{ page_title }} {{idOpportunity}}</h3>
+				<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success' && successMessage">
+					{{ successMessage }}
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}.
+				</div>
+				<form *ngIf="opportunity" class="ml-0 pd-0 mt-3" #updateIndicatorForm="ngForm" (ngSubmit)="onSubmit()">
+					<div class="form-group">
+						<label for="improvementOpportunity" class="labelForm">Oportunidad de Mejora</label>
+						<textarea name="improvementOpportunity" class="form-control inputForm"  #improvementOpportunity="ngModel" [(ngModel)]="opportunity.oportunidad_mejora" cols="30" rows="3" disabled>{{opportunity.oportunidad_mejora}}</textarea>
+					</div>
+					<div class="form-group">
+						<label for="indicatorName" class="labelForm">Nombre del Indicador</label>
+						<input type="text" name="indicatorName" class="form-control inputForm" [ngClass]="{'is-invalid': indicatorName.invalid && indicatorName.touched}" #indicatorName="ngModel" [(ngModel)]="opportunity.nom_indicador" required pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s ]+">
+						<small class="invalid-feedback d-block" *ngIf="indicatorName.invalid && indicatorName.touched">
+							El nombre del indicador no es válido
+						</small>
+					</div> 
+					<div class="form-group">
+						<label for="indicatorFormula" class="labelForm">Formula del Indicador</label>
+						<input type="text" name="indicatorFormula" class="form-control inputForm" [ngClass]="{'is-invalid': indicatorFormula.invalid && indicatorFormula.touched}" #indicatorFormula="ngModel" [(ngModel)]="opportunity.for_indicador" required>
+						<small class="invalid-feedback d-block" *ngIf="indicatorFormula.invalid && indicatorFormula.touched">
+							El nombre del indicador no es válido
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-4 d-inline-block pl-0">
+							<label for="numerator" class="labelForm">Numerador</label>
+							<input type="text" name="numerator" class="form-control inputForm" [ngClass]="{'is-invalid': numerator.invalid && numerator.touched}" #numerator="ngModel" [(ngModel)]="opportunity.numerador" required pattern="[0-9]+">
+						</div>
+						<div class="col-lg-4 d-inline-block pr-0">
+							<label for="denominator" class="labelForm">Denominador</label>
+							<input type="text" name="denominator" class="form-control inputForm" [ngClass]="{'is-invalid': denominator.invalid && denominator.touched || opportunity.denominador == 0}" #denominator="ngModel" [(ngModel)]="opportunity.denominador" required pattern="[0-9]+">
+						</div>
+						<div class="col-lg-4 d-inline-block pr-0">
+							<label for="goalCompliance" class="labelForm">Cumplimiento Meta</label>
+							<input type="text" name="goalCompliance" class="form-control inputForm" [ngClass]="{'is-invalid': goalCompliance.invalid && goalCompliance.touched}" #goalCompliance="ngModel" [(ngModel)]="goal" disabled >
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="numerator.invalid && numerator.touched">
+							El numerador no es correcto
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="(denominator.invalid || opportunity.denominador == 0) && denominator.touched && numerator.valid ">
+							El denominador no es correcto
+						</small>
+					</div>
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Actualizar Oportunidad de Mejoramiento" class="btn btn-success" [disabled]="updateIndicatorForm.invalid || opportunity.denominador==0">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

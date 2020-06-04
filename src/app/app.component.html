@@ -1,20 +1,74 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="headerContainer">
+	<div class="preHeader">
+		<div id="logoAlcaldia" class="inlineAlign"><img src="./assets/img/alcaldiaLogo.png" alt="Logo Alcaldía" title="Logo Alcaldía"></div>
+		<h1 class="inlineAlign pageTitle">Subred Integrada de Servicios de Salud Sur E.S.E.</h1>
+		<div id="logoSubred" class="inlineAlign"><img src="./assets/img/hospitalLogo.png" alt="Logo Subred Sur" title="Logo Subred Sur"></div>
+		<div class="plansTitle">
+			<h2>Planes de Mejoramiento</h2>
+		</div>
+	</div>
+	<nav class="navbar navbar-expand-lg navbar-light personalNavbar">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item dropdown" *ngIf="identity">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Planes de Mejoramiento
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a *ngIf="identity.role != 'ROLE_USER_1' && identity.role != 'ROLE_USER_2'" class="dropdown-item" [routerLink]="['/listar/planes']" [routerLinkActive]="['active']">Listar Planes de Mejoramiento</a>
+						<a *ngIf="identity.role != 'ROLE_USER_1' && identity.role != 'ROLE_USER_2'" class="dropdown-item" [routerLink]="['/registrar/plan']" [routerLinkActive]="['active']">Agregar Plan de Mejoramiento</a>
+						<a *ngIf="identity.role != 'ROLE_USER_1' && identity.role != 'ROLE_USER_3'" class="dropdown-item" [routerLink]="['/oportunidad-mejora/seguimiento-planes/abiertos']" [routerLinkActive]="['active']">Seguimiento Planes de Mejora Abiertos</a>
+						<a *ngIf="identity.role != 'ROLE_USER_1' && identity.role != 'ROLE_USER_3'" class="dropdown-item" [routerLink]="['/oportunidad-mejora/seguimiento-planes/cerrados']" [routerLinkActive]="['active']">Seguimiento Planes de Mejora Cerrados</a>
+						<div *ngIf="identity.role != 'ROLE_USER_1' && identity.role != 'ROLE_USER_3'" class="dropdown-divider"></div>
+						<a *ngIf="identity.role != 'ROLE_USER_3'" class="dropdown-item" [routerLink]="['/registrar/oportunidad-mejora']" [routerLinkActive]="['active']">Agregar Oportunidad de Mejora</a>
+						<div *ngIf="identity.role != 'ROLE_USER_3'" class="dropdown-divider"></div>
+						<a *ngIf="identity.role != 'ROLE_USER_3'" class="dropdown-item" [routerLink]="['/buscar/accion-mejora']" [routerLinkActive]="['active']">Agregar Acción de Mejora</a>					
+					</div>
+				</li>
+				<li class="nav-item dropdown d-none" *ngIf="identity">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Acciones de Mejora Inmediatas
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#">Action</a>
+						<a class="dropdown-item" href="#">Another action</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#">Something else here</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown" *ngIf="identity">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Informes
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" [routerLink]="['/informes/generar-informe/planes-mejoramiento']" [routerLinkActive]="['active']">Generar Informe Planes de Mejoramiento</a>
+					</div>
+				</li>
+			</ul>
+			<ul class="navbar-nav navbar-right menuUser">
+				<li class="nav-item" *ngIf="!identity">
+        			<a class="nav-link" [routerLink]="['/login']" [routerLinkActive]="['active']">Login<span class="sr-only">(current)</span></a>
+      			</li>
+				<li class="nav-item dropdown" *ngIf="identity && identity.name">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{{ identity.name + ' ' + identity.surname }}
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" [routerLink]="['/listar/usuarios']" [routerLinkActive]="['active']" *ngIf="identity.role=='ROLE_SUPER_ADMIN'">Listar Usuarios</a>
+						<a class="dropdown-item" [routerLink]="['/registrar/usuario']" [routerLinkActive]="['active']" *ngIf="identity.role=='ROLE_SUPER_ADMIN'">Agregar Usuarios</a>
+						<div *ngIf="identity.role=='ROLE_SUPER_ADMIN'" class="dropdown-divider"></div>
+						<a class="dropdown-item" [routerLink]="['/logout/1']">Cerrar Sesión</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</nav>
 
+	<div class="bodyContainer">
+		<router-outlet></router-outlet>
+	</div>
+</div>

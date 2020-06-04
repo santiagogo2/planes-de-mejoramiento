@@ -1,0 +1,44 @@
+.imagesWrap{
+	margin: auto;
+	text-align: center;
+	margin-top: 4rem;
+}
+.linkContainer{	
+	width: 22%;
+	display: inline-block;
+	margin-left: 4rem;
+	margin-right: 4rem;
+	cursor: pointer;
+}
+.linkContainer .paragraph{
+	margin-top: 1rem;
+	font-size: 0.87rem;
+	color: #357DA2;
+	font-weight: bold;
+}
+.imageContainer{
+	overflow: hidden;
+	border-radius: 50%;
+	background: #C2D3DC;
+	padding: 30px;
+	width: 85%;
+	margin: auto;
+}
+.imageContainer img{
+	width: 100%;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+.linkContainer:hover img{
+	-webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-o-transform: scale(1.1);
+	transform: scale(1.1);
+}
+.linkContainer:hover .paragraph{
+	text-decoration: underline;
+}

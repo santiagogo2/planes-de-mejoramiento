@@ -1,0 +1,48 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center">
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 imagesWrap">
+			<div class="linkContainer" *ngIf="identity && identity.role=='ROLE_SUPER_ADMIN' || identity.role=='ROLE_ADMIN' || identity.role=='ROLE_USER_3'">
+				<a [routerLink]="['../registrar/plan']"><div class="imageContainer">
+					<img src="../../assets/img/planesMejoramiento.png" alt="Agregar Plan de Mejora" title="Agregar Plan de Mejora">
+				</div>
+				<p class="paragraph">Agregar Plan de Mejora</p></a>
+			</div>
+			<div class="linkContainer" *ngIf="identity && identity.role!='ROLE_USER_1' && identity.role!='ROLE_USER_3'">
+				<a [routerLink]="['../listar/planes']"><div class="imageContainer">
+					<img src="../../assets/img/planesAbiertos.png" alt="Seguimiento Planes de Mejora Abiertos" title="Seguimiento Planes de Mejora Abiertos">
+				</div>
+				<p class="paragraph">Seguimiento Planes de Mejora Abiertos</p></a>
+			</div>
+			<div class="linkContainer" *ngIf="identity && identity.role!='ROLE_USER_1' && identity.role!='ROLE_USER_3'">
+				<a [routerLink]="['../listar/planes']"><div class="imageContainer">
+					<img src="../../assets/img/planesCerrados.png" alt="Seguimiento Planes de Mejora Cerrados" title="Seguimiento Planes de Mejora Cerrados">
+				</div>
+				<p class="paragraph">Seguimiento Planes de Mejora Cerrados</p></a>
+			</div>
+			<div class="linkContainer" *ngIf="identity && identity.role!='ROLE_USER_3'">
+				<a [routerLink]="['../registrar/oportunidad-mejora']"><div class="imageContainer">
+					<img src="../../assets/img/oportunidadMejora.png" alt="Agregar Oportunidad de Mejoramiento" title="Agregar Oportunidad de Mejoramiento">
+				</div>
+				<p class="paragraph">Oportunidad de Mejoramiento</p></a>
+			</div>
+			<div class="linkContainer" *ngIf="identity && identity.role!='ROLE_USER_3'">
+				<a [routerLink]="['../buscar/accion-mejora']"><div class="imageContainer">
+					<img src="../../assets/img/accionMejora.png" alt="Acción de Mejora" title="Acción de Mejora">
+				</div>
+				<p class="paragraph">Acción de Mejora</p></a>
+			</div>
+			<div class="linkContainer d-none">
+				<a href="#"><div class="imageContainer">
+					<img src="../../assets/img/accionesMejoramiento.png" alt="Acciones de Mejora Inmediatas" title="Acciones de Mejora Inmediatas">
+				</div>
+				<p class="paragraph">Acciones de Mejora Inmediata</p></a>
+			</div>
+			<div class="linkContainer">
+				<a [routerLink]="['/informes/generar-informe/planes-mejoramiento']"><div class="imageContainer">
+					<img src="../../assets/img/informes.png" alt="Informes" title="Informes">
+				</div>
+				<p class="paragraph">Informes</p></a>
+			</div>
+		</div>
+	</div>	
+</div>

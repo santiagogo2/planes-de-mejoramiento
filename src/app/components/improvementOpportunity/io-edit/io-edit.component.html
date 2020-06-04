@@ -1,0 +1,149 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-10 col-lg-9 col-xl-8 marginForm">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:history.back()">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">			
+				<div id="preloaderOndas" *ngIf="!plans && !improvementOpportunity && !errorCode">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<h3 class="centerTitle" *ngIf="errorCode || plans && improvementOpportunity">{{ page_title }}</h3>
+				<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success' && successMessage">
+					{{ successMessage }}
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}.
+				</div>
+				<form *ngIf="plans && improvementOpportunity" class="ml-0 pd-0 mt-3" #improvementOpportunityForm="ngForm" (ngSubmit)="onSubmit(improvementOpportunityForm)">
+					<div class="form-group">
+						<label for="improvementPlan" class="labelForm">Plan de Mejoramiento</label>
+						<select name="improvementPlan" class="form-control inputForm" #improvementPlan="ngModel" [(ngModel)]="idPlanPreload" required>
+							<option *ngFor="let plan of plans" value="{{plan.id}}">{{plan.nom_plan}}</option>
+						</select>
+						<small class="invalid-feedback d-block" *ngIf="improvementPlan.invalid && improvementPlan.touched">
+							El plan de mejoramiento no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="auditor" class="labelForm">Auditor*</label>
+							<input type="text" name="auditor" [ngClass]="{'is-invalid': auditor.invalid && auditor.touched}" class="form-control inputForm" #auditor="ngModel" [(ngModel)]="improvementOpportunity.auditor" required>
+						</div>
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="auditDate" class="labelForm">Fecha de Auditoría*</label>
+							<input type="date" name="auditDate" [ngClass]="{'is-invalid': auditDate.invalid && auditDate.touched}" class="form-control inputForm" #auditDate="ngModel" [(ngModel)]="improvementOpportunity.fecha_auditoria" required pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="auditor.invalid && auditor.touched">El auditor ingresado no es correcto</small>
+						<small class="invalid-feedback d-block" *ngIf="auditDate.invalid && auditDate.touched && auditor.valid">La fecha de la auditoría no es correcta</small>			
+					</div>
+					<div class="form-group">
+						<label for="improvementOpportunity1" class="labelForm">Oportunidad de Mejora</label>
+						<textarea name="improvementOpportunity1" class="form-control inputForm" [ngClass]="{'is-invalid': improvementOpportunity1.invalid && improvementOpportunity1.touched}" #improvementOpportunity1="ngModel" [(ngModel)]="improvementOpportunity.oportunidad_mejora" cols="30" rows="3" required></textarea>
+						<small class="invalid-feedback d-block" *ngIf="improvementOpportunity1.invalid && improvementOpportunity1.touched">
+							La Oportunidad de Mejora no es correcta
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="find" class="labelForm">Hallazgo</label>
+						<textarea name="find" class="form-control inputForm" [ngClass]="{'is-invalid': find.invalid && find.touched}" #find="ngModel" [(ngModel)]="improvementOpportunity.hallazgo" cols="30" rows="3"required></textarea>
+						<small class="invalid-feedback d-block" *ngIf="find.invalid && find.touched">
+							El hallazgo no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="findType" class="labelForm">Tipo de Hallazgo*</label>
+						<select name="findType" class="form-control inputForm" #findType="ngModel" [(ngModel)]="improvementOpportunity.tipo_hallazgo" required>
+							<option *ngFor="let ftype of findTypeList" value="{{ftype.value}}">{{ftype.text}}</option>
+						</select>
+						<small class="descriptionText" *ngFor="let ftype of findTypeList"><span *ngIf="findType.valid && improvementOpportunity.tipo_hallazgo==ftype.value"><b>Descripción:</b> {{ftype.description}}</span></small>
+						<small class="invalid-feedback d-block" *ngIf="findType.invalid && findType.touched">El tipo de hallazgo no es correcto</small>
+					</div>
+					<div class="form-group">
+						<label for="causalAnalysis" class="labelForm">Análisis Causal</label>
+						<textarea name="causalAnalysis" class="form-control inputForm" [ngClass]="{'is-invalid': causalAnalysis.invalid && causalAnalysis.touched}" #causalAnalysis="ngModel" [(ngModel)]="improvementOpportunity.analisis" cols="30" rows="3" required></textarea>
+						<small class="invalid-feedback d-block" *ngIf="causalAnalysis.invalid && causalAnalysis.touched">
+							El análisis causal no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="accreditationTable" class="labelForm">Mesa de Acreditación</label>
+							<select name="accreditationTable" class="form-control inputForm" #accreditationTable="ngModel" [(ngModel)]="improvementOpportunity.mesa" required>
+								<option *ngFor="let table of accreditationTableList" value="{{table.value}}">{{table.text}}</option>
+							</select>
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="responsable" class="labelForm">Responsable</label>
+							<select name="responsable" class="form-control inputForm" #responsable="ngModel" [(ngModel)]="improvementOpportunity.proceso" required>
+								<option *ngFor="let manager of managerChecklist" value="{{manager.value}}">{{manager.text}}</option>
+							</select>
+						</div>
+						<small class="valid-feedback d-block" style="font-size: 60%;">
+							{{ improvementOpportunity.mesa }} - {{ improvementOpportunity.proceso }}
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="accreditationTable.invalid && accreditationTable.touched">
+							La mesa de acreditación no es correcta
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="responsable.invalid && responsable.touched && accreditationTable.valid">
+							El responsable no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="risk" class="labelForm">Tipología de Riesgo*</label>
+							<select name="risk" class="form-control inputForm" #risk="ngModel" [(ngModel)]="improvementOpportunity.riesgo" required>
+								<option *ngFor="let risks of riskTypeList" value="{{risks.value}}">{{risks.text}}</option>
+							</select>
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="indicatorName" class="labelForm">Nombre del Indicador de Efectividad</label>
+							<input type="text" name="indicatorName" class="form-control inputForm" [ngClass]="{'is-invalid': indicatorName.invalid && indicatorName.touched}" #indicatorName="ngModel" [(ngModel)]="improvementOpportunity.nom_indicador" required pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s ]+">
+						</div>
+						<small class="descriptionText d-block" *ngFor="let risks of riskTypeList"><span *ngIf="risk.valid && improvementOpportunity.riesgo==risks.value"><b>Descripción:</b> {{risks.description}}</span></small>
+						<small class="invalid-feedback d-block" *ngIf="risk.invalid && risk.touched">
+							El tipo de riesgo no es correcto
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="indicatorName.invalid && indicatorName.touched && risk.valid">
+							El nombre del Indicador de Efectividad no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="indicatorFormula" class="labelForm">Formula del Indicador</label>
+							<textarea name="indicatorFormula" class="form-control inputForm" [ngClass]="{'is-invalid': indicatorFormula.invalid && indicatorFormula.touched}" cols="30" rows="2" #indicatorFormula="ngModel" [(ngModel)]="improvementOpportunity.for_indicador" required></textarea>
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="indicatorGoal" class="labelForm">Meta del Indicador</label>
+							<textarea name="indicatorGoal" class="form-control inputForm" [ngClass]="{'is-invalid': indicatorGoal.invalid && indicatorGoal.touched}" cols="30" rows="2" #indicatorGoal="ngModel" [(ngModel)]="improvementOpportunity.meta" required></textarea>
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="indicatorFormula.invalid && indicatorFormula.touched">
+							La fórmula del indicador no es correcta
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="indicatorGoal.invalid && indicatorGoal.touched && indicatorFormula.valid">
+							La meta del indicador no es correcta
+						</small>
+					</div>
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Actualizar Oportunidad de Mejoramiento" class="btn btn-success" [ngClass]="{'btn_presave': !status, 'btn_nosave': status && status=='error'}" [disabled]="improvementOpportunityForm.invalid">
+					</div>
+					<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success' && successMessage">
+						{{ successMessage }}
+					</div>
+					<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode">
+						{{ errorMessage }}.
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

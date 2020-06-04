@@ -1,0 +1,37 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center">
+		<div class="col col-sm-12 col-md-6 col-lg-5 col-xl-4 marginForm mt-3">
+			<div class="formContainer">
+				<h3 class="centerTitle">{{ page_title }}</h3>
+				<form class="ml-0 pd-0 mt-3" #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+					<div class="form-group">
+						<label for="userAlias" class="labelForm">Alias de Usuario*</label>
+						<input type="text" name="userAlias" class="form-control inputForm" #userAlias="ngModel" [(ngModel)]="user.user_alias" required>
+						<small class="invalid-feedback d-block" *ngIf="!userAlias.valid && userAlias.touched">
+							El alias del usuario no es valido
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="password" class="labelForm">Password*</label>
+						<input type="password" name="password" class="form-control inputForm" #password="ngModel" [(ngModel)]="user.password" required>
+						<small class="invalid-feedback d-block" *ngIf="!password.valid && password.touched">
+							La contraseña es no es valida
+						</small>
+					</div>
+				
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Identificarse" class="btn btn-success" [disabled]="loginForm.invalid">
+					</div>								
+					<div id="preloaderOndas" *ngIf="submitFlag">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</form>
+				<p class="invalid-feedback d-block mt-2 colorRed mb-0" *ngIf="status=='error'">*Los datos que ha ingresado son incorrectos</p>
+			</div>
+		</div>
+	</div>	
+</div>

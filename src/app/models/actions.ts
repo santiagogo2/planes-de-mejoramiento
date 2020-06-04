@@ -1,0 +1,27 @@
+export class Actions{
+	constructor(
+		public id: number,
+		public id_oportunidad: number,
+		public tipo_accion: string,
+		public accion: string,
+		public fecha_ini_accion: string,
+		public fecha_fin_accion: string,
+		public estado: string,
+		public responsable: string,
+		public observacion_cum: string,
+		public estado_seg_linea: string,
+		public observacion_seg_linea: string,
+		public estado_ter_linea: string,
+		public observacion_ter_linea: string,
+		public soporte: string,
+		public usuario_soporte1: string,
+		public soporte2: string,
+		public usuario_soporte2: string,
+		public soporte3: string,
+		public usuario_soporte3: string,
+		public soporte4: string,
+		public usuario_soporte4: string,
+		public soporte5: string,
+		public usuario_soporte5: string,
+	){}
+}

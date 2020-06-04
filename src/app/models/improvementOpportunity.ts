@@ -1,0 +1,27 @@
+export class ImprovementOpportunity{
+	constructor(
+		public id: number,
+		public id_plan: number,
+		public oportunidad_mejora: string,
+		public hallazgo: string,
+		public tipo_hallazgo: string,
+		public analisis: string,
+		public riesgo: string,
+		public mesa: string,
+		public proceso: string,
+		public nom_indicador: string,
+		public for_indicador: string,
+		public meta: string,
+		public id_homologado: number,
+		public causa_homologacion: string,
+		public auditor: string,
+		public fecha_auditoria: string,
+		public cum_pri_linea: number,
+		public cum_seg_linea: number,
+		public cum_ter_linea: number,
+		public cum_indicador: number,
+		public numerador: number,
+		public denominador: number,
+		public estado: number,
+	){}
+}

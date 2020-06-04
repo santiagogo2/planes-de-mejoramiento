@@ -1,0 +1,33 @@
+.formPlan{
+	padding: 0 1.2rem;
+}
+.form-group{
+	margin-bottom: 0.5rem !important;
+}
+
+.first{
+	margin: 0 1rem;
+	height: 25px;
+	widows: 100%;
+	background-color: #DDD;
+	border-radius: 5px;
+	position: relative;
+}
+.first span{
+	position: absolute;
+	bottom: 0.2rem;	
+}
+.second{
+	height: 25px;
+	background-color: #009200;	
+	border-radius: 5px;
+}
+.table td button{
+	width: 43% !important;
+}
+.bad{
+	background-color: #D23C4A;	
+}
+.middle{
+	background-color: #FFC107;	
+}

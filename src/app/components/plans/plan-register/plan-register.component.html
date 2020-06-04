@@ -1,0 +1,59 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-10 col-lg-8 col-xl-7 marginForm">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<!-- <div id="preloaderCruzando" *ngIf="!user.user_alias">
+			</div> -->
+			<div class="formContainer">
+				<h3 class="centerTitle">{{ page_title }}</h3>
+				<div class="alert alert-success wd-100 mt-3" *ngIf="status == 'success' && successMessage">
+					{{ successMessage }} Ver <a [routerLink]="['/listar/planes']">todos los planes</a>
+				</div>
+				<div class="alert alert-danger wd-100 mt-3" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}
+				</div>
+				<!-- Formulario de Registro -->
+				<form class="ml-0 pd-0 mt-3" #planRegisterForm="ngForm" (ngSubmit)="onSubmit(planRegisterForm)">
+					<div class="form-group">
+						<label for="planName" class="labelForm">Nombre del Plan de Mejoramiento*</label>
+						<input type="text" name="planName" [ngClass]="{'is-invalid':planName.invalid && planName.touched}" class="form-control inputForm" #planName="ngModel" [(ngModel)]="plan.nom_plan" required pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s ]+">
+						<small class="invalid-feedback d-block" *ngIf="planName.invalid && planName.touched">
+							El Nombre del plan no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="initialDate" class="labelForm">Fecha Inicial*</label>
+						<input type="date" name="initialDate" [ngClass]="{'is-invalid':initialDate.invalid && initialDate.touched}" class="form-control inputForm" #initialDate="ngModel" [(ngModel)]="plan.fecha_ini" required pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						<small class="invalid-feedback d-block" *ngIf="initialDate.invalid && initialDate.touched">La fecha inicial no es válida</small>
+					</div>
+					<div class="form-group mt-4">
+						<input type="checkbox" name="selectAll" id="selectAll" (change)="checkUncheckAll()" [(ngModel)]="selectedAll"><label class="checkbox titleForm" for="selectAll">Responsables*</label>
+						<div class="col-lg-6 d-inline-block pl-3 align-top" *ngFor="let val of checklist">
+							<input (change)="getSelectedPlan()" type="checkbox" [(ngModel)]="val.isSelected" name="{{val.id}}" id="{{val.id}}" value="{{val.value}}"><label class="checkbox" for="{{val.id}}">{{val.text}}</label>
+						</div>						
+						<small class="invalid-feedback d-block" *ngIf="!responsable">
+							Debe seleccionar al menos un responsable
+						</small>
+					</div>
+
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Crear Plan" class="btn btn-success" [ngClass]="{'btn_presave': !status, 'btn_nosave': status && status=='error'}" [disabled]="planRegisterForm.invalid || !responsable">
+					</div>
+					<div class="alert alert-success wd-100 mt-3" *ngIf="status == 'success' && successMessage">
+						{{ successMessage }} Ver <a [routerLink]="['/listar/planes']">todos los planes</a>
+					</div>
+					<div class="alert alert-danger wd-100 mt-3" *ngIf="status == 'error' && errorCode">
+						{{ errorMessage }}
+					</div>				
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

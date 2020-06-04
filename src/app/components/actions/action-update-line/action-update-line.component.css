@@ -1,0 +1,21 @@
+.imageStyle{
+	width: 2.5rem;
+}
+.deleteStyle{
+	width: 1.5rem;
+	cursor: pointer;
+}
+.trStyle{
+	display: block;
+	margin-bottom: 1rem;
+}
+.checkbox{
+	padding-left: 1.5rem;
+	margin-bottom: 0;
+}
+.checkbox:before{
+	top: 7px;
+}
+table, table tr{
+	width: 100%;
+}

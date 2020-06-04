@@ -1,0 +1,216 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-10 col-lg-9 col-xl-8 marginForm">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">
+				<div id="preloaderOndas" *ngIf="!action && !errorCode">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<h3 class="centerTitle" *ngIf="errorCode || action">{{ page_title }}</h3>				
+				<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success' && successMessage">
+					{{ successMessage }}
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}
+				</div>
+				<div class="createdBy" *ngIf="action"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Created by: <b>{{action.usuario_reg}}</b></div>
+				<form *ngIf="line && action && !errorCode" class="ml-0 pd-0 mt-3" #updateLineForm="ngForm" (ngSubmit)="onSubmit(updateLineForm)">
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="improvementOpportunity1" class="labelForm">Oportunidad de Mejora</label>
+							<textarea name="improvementOpportunity1" class="form-control inputForm" #improvementOpportunity1="ngModel" [(ngModel)]="opportunity.oportunidad_mejora" cols="30" rows="4" disabled></textarea>
+						</div>
+						<div class="col-lg-6 d-inline-block pl-0 pr-0">
+							<label for="find" class="labelForm">Acción</label>
+							<textarea name="find" class="form-control inputForm" #find="ngModel" [(ngModel)]="action.accion" cols="30" rows="4" disabled></textarea>
+						</div>
+					</div>
+					<div class="form-group">					
+						<div class="col-lg-4 d-inline-block pl-0">
+							<label for="actionType" class="labelForm">Tipo de Acción</label>
+							<input type="text" name="actionType" class="form-control inputForm" #actionType="ngModel" [(ngModel)]="action.tipo_accion" disabled="">
+						</div>					
+						<div class="col-lg-4 d-inline-block pl-0">
+							<label for="initialDate" class="labelForm">Fecha Inicial</label>
+							<input type="date" name="initialDate" class="form-control inputForm" max="{{action.fecha_fin_accion}}" #initialDate="ngModel" [(ngModel)]="action.fecha_ini_accion" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" disabled="">
+						</div>
+						<div class="col-lg-4 d-inline-block pr-0">
+							<label for="endDate" class="labelForm">Fecha Final</label>
+							<input type="date" name="endDate" class="form-control inputForm" #endDate="ngModel" [(ngModel)]="action.fecha_fin_accion" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" disabled="">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-12 d-inline-block pl-0 pr-0" *ngIf="line == 1">
+							<label for="firstLineObservation" class="labelForm">Observación {{ actualLine }}</label>
+							<textarea name="firstLineObservation" class="form-control inputForm" [ngClass]="{'is-invalid': firstLineObservation.invalid && firstLineObservation.touched}" #firstLineObservation="ngModel" [(ngModel)]="action.observacion_cum" cols="30" rows="3" required></textarea>
+							<small class="invalid-feedback d-block" *ngIf="firstLineObservation.invalid && firstLineObservation.touched">La Observación Ingresada no es correcta</small>
+						</div>
+						<div class="col-lg-12 d-inline-block pl-0 pr-0" *ngIf="line == 2">
+							<label for="secondLineObservation" class="labelForm">Observación {{ actualLine }}</label>
+							<textarea name="secondLineObservation" class="form-control inputForm" [ngClass]="{'is-invalid': secondLineObservation.invalid && secondLineObservation.touched}" #secondLineObservation="ngModel" [(ngModel)]="action.observacion_seg_linea" cols="30" rows="3" required></textarea>
+							<small class="invalid-feedback d-block" *ngIf="secondLineObservation.invalid && secondLineObservation.touched">La Observación Ingresada no es correcta</small>
+						</div>
+						<div class="col-lg-12 d-inline-block pl-0 pr-0" *ngIf="line == 3">
+							<label for="thirdLineObservation" class="labelForm">Observación {{ actualLine }}</label>
+							<textarea name="thirdLineObservation" class="form-control inputForm" [ngClass]="{'is-invalid': thirdLineObservation.invalid && thirdLineObservation.touched}" #thirdLineObservation="ngModel" [(ngModel)]="action.observacion_ter_linea" cols="30" rows="3" required></textarea>
+							<small class="invalid-feedback d-block" *ngIf="thirdLineObservation.invalid && thirdLineObservation.touched">La Observación Ingresada no es correcta</small>
+						</div>
+					</div>
+					<div class="form-group" *ngIf="fullfilmentTypeList">				
+						<div class="col-lg-6 d-inline-block pl-0" *ngIf="line == 1">
+							<label for="firstFullfilment" class="labelForm">Cumplimiento</label>
+							<select name="firstFullfilment" class="form-control inputForm" #firstFullfilment="ngModel" [(ngModel)]="action.estado" required>
+								<option *ngFor="let fullfil of fullfilmentTypeList" value="{{fullfil.value}}">{{ fullfil.value }}</option>
+								<option value="HOMOLOGADA" *ngIf="action.estado=='HOMOLOGADA'">HOMOLOGADA</option>
+							</select>
+							<small class="invalid-feedback d-block" *ngIf="firstFullfilment.invalid && firstFullfilment.touched">El cumplimiento no es correcto</small>
+						</div>				
+						<div class="col-lg-6 d-inline-block pl-0" *ngIf="line == 2">
+							<label for="secondFullfilment" class="labelForm">Cumplimiento</label>
+							<select name="secondFullfilment" class="form-control inputForm" #secondFullfilment="ngModel" [(ngModel)]="action.estado_seg_linea" required>
+								<option *ngFor="let fullfil of fullfilmentTypeList" value="{{fullfil.value}}">{{ fullfil.value }}</option>
+								<option value="HOMOLOGADA" *ngIf="action.estado_seg_linea=='HOMOLOGADA'">HOMOLOGADA</option>
+							</select>
+							<small class="invalid-feedback d-block" *ngIf="secondFullfilment.invalid && secondFullfilment.touched">El cumplimiento no es correcto</small>
+						</div>				
+						<div class="col-lg-6 d-inline-block pl-0" *ngIf="line == 3">
+							<label for="thirdFullfilment" class="labelForm">Cumplimiento</label>
+							<select name="thirdFullfilment" class="form-control inputForm" #thirdFullfilment="ngModel" [(ngModel)]="action.estado_ter_linea" required>
+								<option *ngFor="let fullfil of fullfilmentTypeList" value="{{fullfil.value}}">{{ fullfil.value }}</option>
+								<option value="HOMOLOGADA" *ngIf="action.estado_ter_linea=='HOMOLOGADA'">HOMOLOGADA</option>
+							</select>
+							<small class="invalid-feedback d-block" *ngIf="thirdFullfilment.invalid && thirdFullfilment.touched">El cumplimiento no es correcto</small>
+						</div>
+					</div>
+					<div class="form-group" *ngIf="line==1">				
+						<div class="col-lg-12 d-inline-block pl-0 align-top">
+							<table>
+								<tr class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 1:</label></td>
+									<td>
+										<angular-file-uploader
+											[config]="afuConfig"
+											[resetUpload]=resetVar
+											(ApiResponse)="fileUpload($event, 0)">
+										</angular-file-uploader>
+									</td>
+									<td *ngIf="action.soporte && action.soporte != '../sop_mejoramiento/ ' && action.soporte != '../sop_mejoramiento/'"><a target="_blank" href="{{urlFile + action.soporte}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte}}" title="{{action.soporte}}" class="imageStyle"></a></td>
+									<td class="pl-1" *ngIf="action.soporte && action.soporte != '../sop_mejoramiento/ ' && action.soporte != '../sop_mejoramiento/'">
+										<input type="checkbox" [(ngModel)]="file0Status" name="file0" id="file0" value=""><label class="checkbox" for="file0"><img src="../../../assets/img/deleteFiles.png" alt="Eliminar Soporte" title="Eliminar Soporte" class="deleteStyle"></label>			
+									</td>
+								</tr>
+								<tr class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 2:</label></td>
+									<td>
+										<angular-file-uploader
+											[config]="afuConfig"
+											[resetUpload]=resetVar
+											(ApiResponse)="fileUpload($event, 1)">
+										</angular-file-uploader>
+									</td>
+									<td *ngIf="action.soporte2 && action.soporte2 != '../sop_mejoramiento/ ' && action.soporte2 != '../sop_mejoramiento/'"><a target="_blank" href="{{urlFile + action.soporte2}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte2}}" title="{{action.soporte2}}" class="imageStyle"></a></td>
+									<td class="pl-1" *ngIf="action.soporte2 && action.soporte2 != '../sop_mejoramiento/ ' && action.soporte2 != '../sop_mejoramiento/'">
+										<input type="checkbox" [(ngModel)]="file1Status" name="file1" id="file1" value=""><label class="checkbox" for="file1"><img src="../../../assets/img/deleteFiles.png" alt="Eliminar Soporte" title="Eliminar Soporte" class="deleteStyle"></label>			
+									</td>
+								</tr>
+								<tr class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 3:</label></td>
+									<td>
+										<angular-file-uploader
+											[config]="afuConfig"
+											[resetUpload]=resetVar
+											(ApiResponse)="fileUpload($event, 2)">
+										</angular-file-uploader>
+									</td>
+									<td *ngIf="action.soporte3 && action.soporte3 != '../sop_mejoramiento/ ' && action.soporte3 != '../sop_mejoramiento/'"><a target="_blank" href="{{urlFile + action.soporte3}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte3}}" title="{{action.soporte3}}" class="imageStyle"></a></td>
+									<td class="pl-1" *ngIf="action.soporte3 && action.soporte3 != '../sop_mejoramiento/ ' && action.soporte3 != '../sop_mejoramiento/'">
+										<input type="checkbox" [(ngModel)]="file2Status" name="file2" id="file2" value=""><label class="checkbox" for="file2"><img src="../../../assets/img/deleteFiles.png" alt="Eliminar Soporte" title="Eliminar Soporte" class="deleteStyle"></label>			
+									</td>
+								</tr>
+								<tr class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 4:</label></td>
+									<td>
+										<angular-file-uploader
+											[config]="afuConfig"
+											[resetUpload]=resetVar
+											(ApiResponse)="fileUpload($event, 3)">
+										</angular-file-uploader>
+									</td>
+									<td *ngIf="action.soporte4 && action.soporte4 != '../sop_mejoramiento/ ' && action.soporte4 != '../sop_mejoramiento/'"><a target="_blank" href="{{urlFile + action.soporte4}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte4}}" title="{{action.soporte4}}" class="imageStyle"></a></td>
+									<td class="pl-1" *ngIf="action.soporte4 && action.soporte4 != '../sop_mejoramiento/ ' && action.soporte4 != '../sop_mejoramiento/'">
+										<input type="checkbox" [(ngModel)]="file3Status" name="file3" id="file3" value=""><label class="checkbox" for="file3"><img src="../../../assets/img/deleteFiles.png" alt="Eliminar Soporte" title="Eliminar Soporte" class="deleteStyle"></label>			
+									</td>
+								</tr>
+								<tr class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 5:</label></td>
+									<td>
+										<angular-file-uploader
+											[config]="afuConfig"
+											[resetUpload]=resetVar
+											(ApiResponse)="fileUpload($event, 4)">
+										</angular-file-uploader>
+									</td>
+									<td *ngIf="action.soporte5 && action.soporte5 != '../sop_mejoramiento/ ' && action.soporte5 != '../sop_mejoramiento/'"><a target="_blank" href="{{urlFile + action.soporte4}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte5}}" title="{{action.soporte5}}" class="imageStyle"></a></td>
+									<td class="pl-1" *ngIf="action.soporte5 && action.soporte5 != '../sop_mejoramiento/ ' && action.soporte5 != '../sop_mejoramiento/'">
+										<input type="checkbox" [(ngModel)]="file4Status" name="file4" id="file4" value=""><label class="checkbox" for="file4"><img src="../../../assets/img/deleteFiles.png" alt="Eliminar Soporte" title="Eliminar Soporte" class="deleteStyle"></label>			
+									</td>
+								</tr>										
+							</table>
+						</div>
+					</div>
+					<div class="form-group" *ngIf="line==2||line==3">				
+						<div class="col-lg-12 d-inline-block pl-0 align-top">
+							<table>
+								<tr *ngIf="action.soporte && action.soporte != '../sop_mejoramiento/ ' && action.soporte != '../sop_mejoramiento/'" class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 1:</label></td>
+									<td><a target="_blank" href="{{urlFile + action.soporte}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte}}" title="{{action.soporte}}" class="imageStyle"></a></td>
+									<td class="pl-3" *ngIf="action.usuario_soporte1"><div class="createdBy"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Upload by: <b>{{action.usuario_soporte1}}</b></div></td>
+								</tr>
+								<tr *ngIf="action.soporte2 && action.soporte2 != '../sop_mejoramiento/ ' && action.soporte2 != '../sop_mejoramiento/'" class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 2:</label></td>
+									<td><a target="_blank" href="{{urlFile + action.soporte2}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte2}}" title="{{action.soporte2}}" class="imageStyle"></a></td>
+									<td class="pl-3" *ngIf="action.usuario_soporte2"><div class="createdBy"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Upload by: <b>{{action.usuario_soporte2}}</b></div></td>
+								</tr>
+								<tr *ngIf="action.soporte3 && action.soporte3 != '../sop_mejoramiento/ ' && action.soporte3 != '../sop_mejoramiento/'" class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 3:</label></td>
+									<td><a target="_blank" href="{{urlFile + action.soporte3}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte3}}" title="{{action.soporte3}}" class="imageStyle"></a></td>
+									<td class="pl-3" *ngIf="action.usuario_soporte3"><div class="createdBy"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Upload by: <b>{{action.usuario_soporte3}}</b></div></td>
+								</tr>
+								<tr *ngIf="action.soporte4 && action.soporte4 != '../sop_mejoramiento/ ' && action.soporte4 != '../sop_mejoramiento/'" class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 4:</label></td>
+									<td><a target="_blank" href="{{urlFile + action.soporte4}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte4}}" title="{{action.soporte4}}" class="imageStyle"></a></td>
+									<td class="pl-3" *ngIf="action.usuario_soporte4"><div class="createdBy"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Upload by: <b>{{action.usuario_soporte4}}</b></div></td>
+								</tr>
+								<tr *ngIf="action.soporte5 && action.soporte5 != '../sop_mejoramiento/ ' && action.soporte5 != '../sop_mejoramiento/'" class="trStyle">
+									<td><label class="labelForm font-weight-bold">Soporte No 5:</label></td>
+									<td><a target="_blank" href="{{urlFile + action.soporte5}}"><img src="../../../assets/img/uploadFile.png" alt="{{action.soporte5}}" title="{{action.soporte5}}" class="imageStyle"></a></td>
+									<td class="pl-3" *ngIf="action.usuario_soporte5"><div class="createdBy"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Upload by: <b>{{action.usuario_soporte5}}</b></div></td>
+								</tr>										
+							</table>
+						</div>
+					</div>
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Guardar" class="btn btn-success" [ngClass]="{'btn_presave': !status, 'btn_nosave': status && status=='error'}" [disabled]="updateLineForm.invalid">
+					</div>
+					<div class="alert alert-success wd-100 mt-3 mb-0 text-center" *ngIf="status == 'success' && successMessage">
+						{{ successMessage }}
+					</div>
+					<div class="alert alert-danger wd-100 mt-3 mb-0 text-center" *ngIf="status == 'error' && errorCode">
+						{{ errorMessage }}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

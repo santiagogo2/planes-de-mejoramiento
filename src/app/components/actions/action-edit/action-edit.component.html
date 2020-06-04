@@ -1,0 +1,82 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-10 col-lg-8 col-xl-7 marginForm">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">
+				<div id="preloaderOndas" *ngIf="!action && !errorCode">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<h3 class="centerTitle" *ngIf="errorCode || action">{{ page_title }} {{idAction}}</h3>
+				<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success'">
+					{{ successMessage }}.
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode || errorCode2">
+					{{ errorMessage }}
+				</div>
+				<form *ngIf="action && !errorCode" class="ml-0 pd-0 mt-3" #actionEditForm="ngForm" (ngSubmit)="onSubmit(actionEditForm)">
+					<div class="form-group">
+						<label for="improvementOpportunity1" class="labelForm">Oportunidad de Mejora</label>
+						<textarea name="improvementOpportunity1" class="form-control inputForm" #improvementOpportunity1="ngModel" [(ngModel)]="opportunityName" cols="30" rows="4" required disabled></textarea>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="actionType" class="labelForm">Tipo de Acción*</label>
+							<select name="actionType" class="form-control inputForm" #actionType="ngModel" [(ngModel)]="action.tipo_accion" required>
+								<option *ngFor="let type of actionTypeList" value="{{type.value}}">{{ type.value }}</option>
+							</select>
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="responsableHTML" class="labelForm">Responsable*</label>
+							<select name="responsableHTML" class="form-control inputForm" #responsableHTML="ngModel" [(ngModel)]="action.responsable" required>
+								<option *ngFor="let respon of responsableList" value="{{respon.value}}">{{respon.text}}</option>
+							</select>
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="actionType.invalid && actionType.touched">
+							El tipo de acción es incorrecto
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="actionType.valid && responsableHTML.invalid && responsableHTML.touched">
+							El responsable no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="actionDescription" class="labelForm">Acción (Descripción)*</label>
+						<textarea name="actionDescription" class="form-control inputForm" [ngClass]="{'is-invalid': actionDescription.invalid && actionDescription.touched}" #actionDescription="ngModel" [(ngModel)]="action.accion" cols="30" rows="2" required></textarea>
+						<small class="invalid-feedback d-block" *ngIf="actionDescription.invalid && actionDescription.touched">
+							La descripción de la acción no es correcta
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="initialDate" class="labelForm">Fecha Inicial*</label>
+							<input type="date" name="initialDate" class="form-control inputForm" [ngClass]="{'is-invalid': initialDate.invalid && initialDate.touched}" max="{{action.fecha_fin_accion}}" #initialDate="ngModel" [(ngModel)]="action.fecha_ini_accion" required pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="endDate" class="labelForm">Fecha Final*</label>
+							<input type="date" name="endDate" class="form-control inputForm" [ngClass]="{'is-invalid': endDate.invalid && endDate.touched}" min="{{action.fecha_ini_accion}}" #endDate="ngModel" [(ngModel)]="action.fecha_fin_accion" required pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="initialDate.invalid && initialDate.touched">
+							La fecha inicial no es válida
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="initialDate.valid && endDate.invalid && endDate.touched">
+							La fecha final no es válida
+						</small>					
+					</div>
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Actualizar Acción de Mejora" class="btn btn-success" [disabled]="actionEditForm.invalid">
+					</div>	
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<!-- <button (click)="exportAsXLSX()">Generar Reporte</button> -->
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div id="preloaderCruzando" *ngIf="!plans || !errorCode">
+		</div>
+		<div class="col col-sm-12 col-md-10 col-lg-8 col-xl-7 marginForm" *ngIf="plans">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">
+				<h3 class="centerTitle">{{ page_title }}</h3>
+				<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success' && successMessage">
+					{{ successMessage }}
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}
+				</div>
+				<!-- Formulario -->
+				<form class="ml-0 pd-0 mt-3" #reportsForm="ngForm" (ngSubmit)="onSubmit()">
+					<div class="form-group">
+						<label for="reports" class="labelForm">Escoja el Informe que Desea Generar*</label>
+						<select type="text" name="reports" class="form-control inputForm" #reports="ngModel" [(ngModel)]="reportType" required>
+							<option value="0">INFORME GENERAL</option>
+							<option value="1">INFORME POR PLANES</option>
+							<option value="2">INFORME POR PROCESO</option>
+						</select>
+						<small class="invalid-feedback d-block" *ngIf="reports.invalid && reports.touched">
+							Debe seleccionar un opción de informe
+						</small>
+					</div>
+					
+					<!-- Second Line -->
+					<div class="form-group" *ngIf="reportType && reportType==1">
+						<label for="planList" class="labelForm">Escoja el plan*</label>
+						<select type="text" name="planList" class="form-control inputForm" #planList="ngModel" [(ngModel)]="planSelected" required>
+							<option *ngFor="let plan of plans" value="{{plan.id}}">{{ plan.nom_plan }}</option>
+						</select>
+						<small class="invalid-feedback d-block" *ngIf="planList.invalid && planList.touched">
+							Debe seleccionar un opción de informe
+						</small>
+					</div>
+					<div class="form-group" *ngIf="reportType && reportType==2">
+						<label for="processList" class="labelForm">Escoja el proceso*</label>
+						<select type="text" name="processList" class="form-control inputForm" #processList="ngModel" [(ngModel)]="processSelected" required>
+							<option *ngFor="let process of processes" value="{{process.value}}">{{ process.text }}</option>
+						</select>
+						<small class="invalid-feedback d-block" *ngIf="processList.invalid && processList.touched">
+							Debe seleccionar un opción de informe
+						</small>
+					</div>
+
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Generar Informe" class="btn btn-success" [disabled]="reportsForm.invalid">
+					</div>					
+					<div style="margin-top: 2rem;" id="preloaderOndas" *ngIf="flag && flag==1">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>			
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

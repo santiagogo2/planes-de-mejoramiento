@@ -1,0 +1,19 @@
+.linkPassword{
+	font-size: 0.9rem;
+}
+.linkPassword a{
+	padding: 0.2rem 1rem;
+	border-radius: 0.25rem;
+	color: #44A1D1;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+.linkPassword a:hover{
+	font-size: 0.9rem;
+	background-color: #44A1D1;
+	color: #F7F7F7;
+	text-decoration: none;
+}

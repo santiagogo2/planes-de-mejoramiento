@@ -1,0 +1,173 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm border_bottom">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">
+				<div id="preloaderOndas" *ngIf="!improvementOpportunity && !errorCode">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<h3 class="centerTitle" *ngIf="errorCode || improvementOpportunity">{{ page_title1 }} {{ idOpportunity }} </h3>				
+				<div class="alert alert-success wd-100 mt-3 text-center" *ngIf="status == 'success' || deleteStatus == 'success'">
+					{{ successMessage }} Puede verificar en la parte inferior de la página.
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}
+				</div>
+				<form *ngIf="improvementOpportunity && !errorCode" class="ml-0 pd-0 mt-3" #improvementOpportunityForm="ngForm" (ngSubmit)="onSubmit(improvementOpportunityForm)">
+					<div class="form-group">
+						<div class="col-lg-4 d-inline-block pl-0">
+							<label for="improvementOpportunity1" class="labelForm">Oportunidad de Mejora</label>
+							<textarea name="improvementOpportunity1" class="form-control inputForm" #improvementOpportunity1="ngModel" [(ngModel)]="improvementOpportunity.oportunidad_mejora" cols="30" rows="4" required disabled></textarea>
+						</div>
+						<div class="col-lg-4 d-inline-block pl-0 pr-0">
+							<label for="find" class="labelForm">Hallazgo</label>
+							<textarea name="find" class="form-control inputForm" #find="ngModel" [(ngModel)]="improvementOpportunity.hallazgo" cols="30" rows="4"required disabled></textarea>
+						</div>
+						<div class="col-lg-4 d-inline-block pr-0">
+							<label for="causalAnalysis" class="labelForm">Análisis Causal</label>
+							<textarea name="causalAnalysis" class="form-control inputForm" #causalAnalysis="ngModel" [(ngModel)]="improvementOpportunity.analisis" cols="30" rows="4" required disabled></textarea>
+						</div>
+						<small *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN' || identity.user_alias==improvementOpportunity.usuario_reg" class="valid-feedback d-block">Si desea editar La Oportunidad de Mejoramiento completa siga el siguiente <a [routerLink]="['/editar/oportunidad-mejora', improvementOpportunity.id]">enlace</a></small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="actionType" class="labelForm">Tipo de Acción*</label>
+							<select name="actionType" class="form-control inputForm" #actionType="ngModel" [(ngModel)]="action.tipo_accion" required>
+								<option *ngFor="let type of actionTypeList" value="{{type.value}}">{{ type.value }}</option>
+							</select>
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="responsableHTML" class="labelForm">Responsable*</label>
+							<select name="responsableHTML" class="form-control inputForm" #responsableHTML="ngModel" [(ngModel)]="action.responsable" required>
+								<option *ngFor="let respon of responsableList" value="{{respon.value}}">{{respon.text}}</option>
+							</select>
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="actionType.invalid && actionType.touched">
+							El tipo de acción es incorrecto
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="actionType.valid && responsableHTML.invalid && responsableHTML.touched">
+							El responsable no es correcto
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="actionDescription" class="labelForm">Acción (Descripción)*</label>
+						<textarea name="actionDescription" class="form-control inputForm" [ngClass]="{'is-invalid': actionDescription.invalid && actionDescription.touched}" #actionDescription="ngModel" [(ngModel)]="action.accion" cols="30" rows="2" required></textarea>
+						<small class="invalid-feedback d-block" *ngIf="actionDescription.invalid && actionDescription.touched">
+							La descripción de la acción no es correcta
+						</small>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="initialDate" class="labelForm">Fecha Inicial*</label>
+							<input type="date" name="initialDate" class="form-control inputForm" [ngClass]="{'is-invalid': initialDate.invalid && initialDate.touched}" max="{{action.fecha_fin_accion}}" #initialDate="ngModel" [(ngModel)]="action.fecha_ini_accion" required pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						</div>
+						<div class="col-lg-6 d-inline-block pr-0">
+							<label for="endDate" class="labelForm">Fecha Final*</label>
+							<input type="date" name="endDate" class="form-control inputForm" [ngClass]="{'is-invalid': endDate.invalid && endDate.touched}" min="{{action.fecha_ini_accion}}" #endDate="ngModel" [(ngModel)]="action.fecha_fin_accion" required pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])">
+						</div>
+						<small class="invalid-feedback d-block" *ngIf="initialDate.invalid && initialDate.touched">
+							La fecha inicial no es válida
+						</small>
+						<small class="invalid-feedback d-block" *ngIf="initialDate.valid && endDate.invalid && endDate.touched">
+							La fecha final no es válida
+						</small>					
+					</div>
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Siguiente" class="btn btn-success" [disabled]="improvementOpportunityForm.invalid">
+					</div>	
+				</form>
+			</div>
+		</div>
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3 marginForm border_top" *ngIf="improvementOpportunity && !errorCode">
+			<div class="formContainer">
+				<div id="preloaderOndas" *ngIf="!actionsPreload && !errorCode2">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="alert alert-danger wd-100 mt-3 text-center" *ngIf="status == 'error' && errorCode2">
+					{{ errorMessage2 }}
+				</div>
+				<div *ngIf="!errorCode2 && actionsPreload">
+					<div class="paginationControls" *ngIf="actionsPreload.length > 20">
+						<pagination-controls (pageChange)="pageChange($event)"
+											 previousLabel="Anterior"
+											 nextLabel="Siguiente"
+											 maxSize="4">
+						</pagination-controls>
+					</div>
+					<div class="titletable">
+						{{ page_title2 }}
+					</div>
+					<table class="table table-bordered m-0">
+						<thead class="thead_styles">
+							<tr>
+								<th width="6%">ID</th>
+								<th width="12%">Tipo de Acción</th>
+								<th>Descripción de la Acción</th>
+								<th width="14%">Fecha Inicial</th>
+								<th width="14%">Fecha Final</th>
+								<th *ngIf="identity.role == 'ROLE_SUPER_ADMIN'" width="8%">Eliminar</th>
+							</tr>
+						</thead>
+						<tbody class="tbody_styles">
+							<tr *ngFor="let action of actionsPreload | paginate: {itemsPerPage: itemsPerPage, currentPage: actualPage}">
+								<td><a [routerLink]="['/editar/accion-mejora', action.id]">{{ action.id }}</a></td>
+								<td><a [routerLink]="['/editar/accion-mejora', action.id]">{{ action.tipo_accion }}</a></td>
+								<td><a [routerLink]="['/editar/accion-mejora', action.id]">{{ action.accion }}</a></td>
+								<td><a [routerLink]="['/editar/accion-mejora', action.id]">{{ action.fecha_ini_accion }}</a></td>
+								<td><a [routerLink]="['/editar/accion-mejora', action.id]">{{ action.fecha_fin_accion }}</a></td>
+								<td *ngIf="identity.role == 'ROLE_SUPER_ADMIN'" style="padding: 0.55rem"><button type="button" class="btn btn-danger" data-toggle="modal" [attr.data-target]="'#myModal'+action.id">Borrar</button></td>
+								<!-- The Modal -->
+								<div *ngIf="identity.role == 'ROLE_SUPER_ADMIN'" class="modal" id="{{ 'myModal'+action.id }}">
+									<div class="modal-dialog">
+										<div class="modal-content">
+
+											<!-- Modal Header -->
+									    	<div class="modal-header">
+									    		<h4 class="modal-title">Borrar la Acción de Mejora Definitivamente</h4>
+									    		<button type="button" class="close" data-dismiss="modal">&times;</button>
+									    	</div>
+
+											<!-- Modal body -->
+											<div class="modal-body ">
+												Seguro que quieres borrar la acción de mejora: <b>{{ action.tipo_accion }}</b>?
+											</div>
+
+											<!-- Modal footer -->
+											<div class="modal-footer">
+												<a (click)="deleteAction(action.id)" class="btn_delete" data-dismiss="modal">Borrar</a>
+												<button type="button" class="btn_close" data-dismiss="modal">Close</button>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</tr>
+						</tbody>
+					</table>			
+					<div class="paginationControls mt-3" *ngIf="actionsPreload.length > 20">
+						<pagination-controls (pageChange)="pageChange($event)"
+											 previousLabel="Anterior"
+											 nextLabel="Siguiente"
+											 maxSize="4">
+						</pagination-controls>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

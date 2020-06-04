@@ -1,0 +1,24 @@
+.table td{
+	padding: 0 !important;
+	vertical-align: middle;
+}
+.table td a{
+	display: block;
+	width: 100%;
+	height: 100%;
+	padding: 0.55rem;
+	text-decoration: none;
+	color: #212529;
+}
+.tbody_styles{
+	font-size: 0.73rem;
+}
+.table thead th{
+	vertical-align: middle;
+}
+.table tbody tr:hover a{
+	color: #F7F7F7;
+}
+.table tbody tr:hover{
+	background-color: #68BBC3; 
+}

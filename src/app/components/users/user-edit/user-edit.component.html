@@ -1,0 +1,71 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-8 col-lg-6 col-xl-5">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div id="preloaderCruzando" *ngIf="!user.user_alias && !errorCode">
+			</div>
+			<div class="formContainer" *ngIf="!user.user_alias && errorCode">
+				<div class="alert alert-danger wd-100 mt-3 alertTextCenter" *ngIf="errorCode==404 && status=='error'">
+					Está intentando editar un usuario que no existe.
+				</div>
+			</div>
+			<div class="formContainer" *ngIf="user.user_alias">
+				<h3 class="centerTitle">{{ page_title }}</h3>
+				<div class="alert alert-success wd-100 mt-3" *ngIf="status == 'success' && successMessage">
+					{{ successMessage }} Ver <a [routerLink]="['/listar/usuarios']">todos los usuarios</a>
+				</div>
+				<div class="alert alert-danger wd-100 mt-3" *ngIf="status == 'error' && errorCode">
+					{{ errorMessage }}
+				</div>
+				<!-- Formulario de Registro -->
+				<form class="ml-0 pd-0 mt-3" #userEditForm="ngForm" (ngSubmit)="onSubmit(userEditForm)">
+					<div class="form-group">
+						<label for="userAlias" class="labelForm">Alias de Usuario*</label>
+						<input type="text" name="userAlias" class="form-control inputForm" #userAlias="ngModel" [(ngModel)]="user.user_alias" required>
+						<small class="invalid-feedback d-block" *ngIf="!userAlias.valid && userAlias.touched">
+							El alias del usuario no es valido
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="name" class="labelForm">Nombre*</label>
+						<input type="text" name="name" class="form-control inputForm" #name="ngModel" [(ngModel)]="user.name" required pattern="[a-zA-Z ]+">
+						<small class="invalid-feedback d-block" *ngIf="!name.valid && name.touched">
+							El nombre no es valido
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="surname" class="labelForm">Apellidos*</label>
+						<input type="text" name="surname" class="form-control inputForm" #surname="ngModel" [(ngModel)]="user.surname" required pattern="[a-zA-Z ]+">
+						<small class="invalid-feedback d-block" *ngIf="!surname.valid && surname.touched">
+							Los apellidos son invalidos
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="userRole" class="labelForm">Role de Usuario*</label>
+						<select type="text" name="userRole" class="form-control inputForm" #userRole="ngModel" [(ngModel)]="user.role" required>
+							<option *ngFor="let opt of permissionsList" value="{{ opt.value }}">{{ opt.text }}</option>
+						</select>
+						<small class="invalid-feedback d-block" *ngIf="!userRole.valid && userRole.touched">
+							El role no es valido
+						</small>
+						<small class="descriptionText" *ngFor="let opt of permissionsList">
+							<span *ngIf="user.role && opt.value == user.role"><b>Descripción:</b> {{opt.description}}</span>
+						</small>
+					</div>
+					<div class="w-100 centerTitle linkPassword"><a [routerLink]="['/change/password', user.id]">Actualizar Contraseña</a></div>
+				
+					<div class="buttonSubmit mt-3 d-block">
+						<input type="submit" value="Actualizar" class="btn btn-success" [disabled]="userEditForm.invalid">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

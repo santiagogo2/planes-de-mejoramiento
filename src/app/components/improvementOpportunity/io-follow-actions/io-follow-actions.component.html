@@ -1,0 +1,225 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm mt-3 border_bottom">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status=='error' && errorCode">
+				{{ errorMessage }}
+			</div>
+			<div id="preloaderOndas" *ngIf="!opportunity && !errorCode">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<form class="formPlan" *ngIf="opportunity && !errorCode">
+				<div class="createdBy"><span style="font-size: 1.2rem;" class="fa fa-user"></span> Created by: <b>{{opportunity.usuario_reg}}</b></div>
+				<div class="titletable mb-3" *ngIf="!opportunity.id_homologado">
+					{{ page_title1 }} {{opportunity.id}} Plan de Mejora {{plan.id}}
+				</div>
+				<div class="titletable mb-3" *ngIf="opportunity.id_homologado && opportunity.estado==0">
+					{{ page_title1 }} {{opportunity.id}}. Homologado ID: {{opportunity.id_homologado}} Plan de Mejora {{plan.id}}
+				</div>
+				<div class="form-group">
+					<div class="col-lg-4 d-inline-block pl-0">
+						<label for="initialOpportunity" class="labelForm">Oportunidad de Mejora</label>
+						<textarea name="initialOpportunity" class="form-control inputForm" #initialOpportunity="ngModel" [(ngModel)]="opportunity.oportunidad_mejora" cols="30" rows="4" disabled></textarea>
+					</div>
+					<div class="col-lg-4 d-inline-block pl-0 pr-0">
+						<label for="find" class="labelForm">Hallazgo</label>
+						<textarea name="find" class="form-control inputForm" #find="ngModel" [(ngModel)]="opportunity.hallazgo" cols="30" rows="4" disabled></textarea>
+					</div>
+					<div class="col-lg-4 d-inline-block pr-0">
+						<label for="causalAnalysis" class="labelForm">Análisis Causal</label>
+						<textarea name="causalAnalysis" class="form-control inputForm" #causalAnalysis="ngModel" [(ngModel)]="opportunity.analisis" cols="30" rows="4" disabled></textarea>
+					</div>
+					<small *ngIf="identity.role=='ROLE_SUPER_ADMIN' || identity.role=='ROLE_ADMIN' || identity.user_alias==opportunity.usuario_reg" class="valid-feedback d-block">Si desea editar La Oportunidad de Mejoramiento completa siga el siguiente <a [routerLink]="['/editar/oportunidad-mejora', opportunity.id]">enlace</a></small>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-4 d-inline-block pl-0">
+						<label for="planName" class="labelForm">Nombre del Plan de Mejoramiento Asociado</label>
+						<input type="text" name="planName" class="form-control inputForm" disabled value="{{ plan.nom_plan }}">
+					</div>
+					<div class="col-lg-4 d-inline-block pl-0 pr-0">
+						<label for="planSource" class="labelForm">Mesa de Acreditación</label>
+						<input type="text" name="planSource" class="form-control inputForm" disabled value="{{ plan.fuente }}">
+					</div>
+					<div class="col-lg-4 d-inline-block pr-0">
+						<label for="planSource" class="labelForm">Responsable</label>
+						<input type="text" name="planSource" class="form-control inputForm" disabled value="{{ plan.fuente }}">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-6 d-inline-block pl-0">
+						<label for="indicatorFormula" class="labelForm">Formula Indicador</label>
+						<textarea name="indicatorFormula" class="form-control inputForm" #indicatorFormula="ngModel" [(ngModel)]="opportunity.for_indicador" cols="30" rows="2" required disabled></textarea>
+					</div>
+					<div class="col-lg-6 d-inline-block pl-0 pr-0">
+						<label for="goal" class="labelForm">Meta del Indicador</label>
+						<textarea name="goal" class="form-control inputForm" #goal="ngModel" [(ngModel)]="opportunity.meta" cols="30" rows="2"required disabled></textarea>
+					</div>
+				</div>				
+				<small *ngIf="identity.role=='ROLE_SUPER_ADMIN' || identity.role=='ROLE_ADMIN' || identity.user_alias==plan.usuario_reg" class="valid-feedback d-block">Si desea editar el Plan de Mejoramiento siga el siguiente <a [routerLink]="['/editar/plan/', plan.id]">enlace</a></small>
+			</form>
+		</div>
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm mt-3 border_top border_bottom" *ngIf="!errorCode && opportunity">
+			<div style="padding: 0 1.2rem;">
+				<div class="titletable">
+					{{ page_title2 }}
+				</div>
+				<table class="table table-bordered m-0">
+					<thead class="thead_styles">
+						<tr>
+							<th width="27%">Cumplimiento Primera Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="10%" width="28%">Cumplimiento Segunda Linea de Defensa</th>
+							<th width="20%">Nombre Indicador Efectividad <a [routerLink]="['/oportunidad-mejora/editar-indicador-efectividad/', opportunity.id]"><img style="cursor: pointer" width="8%" src="../../../assets/img/editIndicator.png" alt="Editar Indicador de Efectividad" title="Editar Indicador de Efectividad"></a></th>
+							<th width="25%">Cumplimiento Indicador Efectividad</th>
+						</tr>
+					</thead>
+					<tbody class="tbody_styles">
+						<tr>
+							<td>
+								<div class="first">
+									<span>{{ opportunity.cum_pri_linea }}%</span>
+									<div [ngStyle]="{'width.%':opportunity.cum_pri_linea}" [ngClass]="{'bad': opportunity.cum_pri_linea<30, 'middle': opportunity.cum_pri_linea>29 && opportunity.cum_pri_linea<70}" class="second"></div>
+								</div>
+							</td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="10%">
+								<div class="first">
+									<span>{{ opportunity.cum_seg_linea }}%</span>
+									<div [ngStyle]="{'width.%':opportunity.cum_seg_linea}" [ngClass]="{'bad': opportunity.cum_seg_linea<30, 'middle': opportunity.cum_seg_linea>29 && opportunity.cum_seg_linea<70}" class="second"></div>
+								</div>
+							</td>
+							<td>{{ opportunity.nom_indicador }}</td>
+							<td width="17%">
+								<div class="first">
+									<span>{{ opportunity.cum_indicador }}%</span>
+									<div [ngStyle]="{'width.%':opportunity.cum_indicador}" [ngClass]="{'bad': opportunity.cum_indicador<30, 'middle': opportunity.cum_indicador>29 && opportunity.cum_indicador<70}" class="second"></div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm mt-3 border_top border_bottom" *ngIf="!errorCode && opportunity">
+			<div style="padding: 0 1.2rem;">
+				<div class="titletable mb-3">
+					{{ page_title3 }}
+				</div>
+				<div class="col-lg-8 alert alert-success wd-100 text-center" style="margin: auto;" *ngIf="successMessage1 && !errorCode1">
+					{{successMessage1}}
+				</div>
+				<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status=='error' && errorCode1">
+					{{errorMessage1}}
+				</div>
+				<form class="formPlan" *ngIf="opportunity && !errorCode" #opportunityHomologateForm="ngForm" (ngSubmit)="searchOpportunity()">
+					<div class="form-group">
+						<div class="col-lg-6 d-inline-block pl-0">
+							<label for="opportunityHomologate" class="labelForm">Id Oportunidad de Mejora</label>
+							<input type="text" name="opportunityHomologate" class="form-control inputForm" [ngClass]="{'is-invalid': opportunityHomologate.invalid && opportunityHomologate.touched}" #opportunityHomologate="ngModel" [(ngModel)]="idHomologate" required pattern="[0-9]+">
+						</div>
+						<div class="col-lg-6 d-inline-block pl-0">
+							<div class="buttonSubmit mt-4">
+								<input type="submit" value="Buscar Oportunidad de Mejora" class="btn btn-info" [disabled]="opportunityHomologateForm.invalid">
+							</div>
+						</div>		
+						<small class="invalid-feedback d-block" *ngIf="opportunityHomologate.invalid && opportunityHomologate.touched">El ID de la Oportunidad de Mejora no es correcto</small>					
+					</div>
+				</form>
+				<form class="formPlan" *ngIf="oppHomologate && !errorCode1 && !errorCode" #homologateForm="ngForm" (ngSubmit)="homologateOpportunity()">
+					<div class="form-group">
+						<div class="col-lg-4 d-inline-block pl-0">
+							<label for="IOHomologate" class="labelForm">Oportunidad de Mejora</label>
+							<textarea name="IOHomologate" class="form-control inputForm" #IOHomologate="ngModel" [(ngModel)]="oppHomologate.oportunidad_mejora" cols="30" rows="4" disabled></textarea>
+						</div>
+						<div class="col-lg-4 d-inline-block pl-0 pr-0">
+							<label for="findHomologate" class="labelForm">Hallazgo</label>
+							<textarea name="findHomologate" class="form-control inputForm" #findHomologate="ngModel" [(ngModel)]="oppHomologate.hallazgo" cols="30" rows="4" disabled></textarea>
+						</div>
+						<div class="col-lg-4 d-inline-block pr-0">
+							<label for="causalAnalysisHomologate" class="labelForm">Análisis Causal</label>
+							<textarea name="causalAnalysisHomologate" class="form-control inputForm" #causalAnalysisHomologate="ngModel" [(ngModel)]="oppHomologate.analisis" cols="30" rows="4" disabled></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="causeHomologate" class="labelForm">Causa para la Homologación de la Oportunidad de Mejora</label>
+						<textarea name="causeHomologate" class="form-control inputForm" [ngClass]="{'is-invalid': causeHomologate.invalid && causeHomologate.touched}" #causeHomologate="ngModel" [(ngModel)]="opportunity.causa_homologacion" cols="30" rows="2" minlength="30" placeholder="Debe ingresar mínimo 30 caracteres." required></textarea>
+						<small class="invalid-feedback d-block" *ngIf="causeHomologate.invalid && causeHomologate.touched">La causa de homologación no es correcta</small>
+					</div>
+					<!-- <small class="valid-feedback d-block">Si desea ver la Oportunidad de Mejora base siga el <a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', idHomologate]">enlace</a></small> -->
+
+					<div class="buttonSubmit mt-4">
+						<input type="submit" value="Homologar Oportunidad de Mejora" class="btn btn-success" [disabled]="homologateForm.invalid">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm mt-3 border_top" *ngIf="opportunity && !errorCode">
+			<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status2=='error' && errorCode2">
+				{{errorMessage2}} <span *ngIf="errorCode2==404">Puede agregarlas en el siguiente <a [routerLink]="['/registrar/accion-mejora/', opportunity.id]">enlace</a></span>
+			</div>
+			<div id="preloaderOndas" *ngIf="!actions && !errorCode2">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div style="padding: 1.2rem;" *ngIf="actions && !errorCode2">
+				<div class="paginationControls" *ngIf="actions.length > 20">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+				<div class="titletable">
+					{{ page_title4 }}
+				</div>
+				<table class="table table-bordered m-0">
+					<thead class="thead_styles">
+						<tr>
+							<th width="5%">ID</th>
+							<th width="10%">Tipo de Acción</th>
+							<th width="25%">Descripción de la Acción</th>
+							<th width="10%">Estado Primera Linea de Defensa</th>
+							<th width="10%">Seguimiento Primera Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="10%">Estado Segunda Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="10%">Seguimiento Segunda Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="10%">Estado Tercera Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="10%">Seguimiento Tercera Linea de Defensa</th>
+						</tr>
+					</thead>
+					<tbody class="tbody_styles">
+						<tr *ngFor="let action of actions | paginate: {itemsPerPage: itemsPerPage, currentPage: actualPage}">
+							<td>{{ action.id }}</td>
+							<td>{{ action.tipo_accion }}</td>
+							<td>{{ action.accion }}</td>
+							<td>{{ action.estado }}</td>
+							<td><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/update-line/1/', action.id]"><img src="../../../assets/img/uploadDocuments.png" alt=""></a></td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'">{{ action.estado_seg_linea }}</td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/update-line/2/', action.id]"><img src="../../../assets/img/uploadDocuments.png" alt=""></a></td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'">{{ action.estado_ter_linea }}</td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/update-line/3/', action.id]"><img src="../../../assets/img/uploadDocuments.png" alt=""></a></td>
+						</tr>
+					</tbody>
+				</table>			
+				<div class="paginationControls mt-3" *ngIf="actions.length > 20">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,186 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm mt-3 border_bottom">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status=='error' && errorCode2">
+				{{errorMessage2}}
+			</div>
+			<div id="preloaderOndas" *ngIf="!plan && !errorCode2">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+
+			<form class="formPlan" *ngIf="plan">
+				<div class="titletable mb-3">
+					{{ page_title1 }} ID: {{plan.id}}
+				</div>
+				<div class="form-group">
+					<div class="col-lg-6 d-inline-block pl-0">
+						<label for="planName" class="labelForm">Nombre del Plan de Mejoramiento</label>
+						<input type="text" name="planName" class="form-control inputForm" disabled value="{{ plan.nom_plan }}">
+					</div>
+					<div class="col-lg-6 d-inline-block pr-0">
+						<label for="planSource" class="labelForm">Fuente del Plan</label>
+						<input type="text" name="planSource" class="form-control inputForm" disabled value="{{ plan.fuente }}">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-6 d-inline-block pl-0">
+						<label for="initialDate" class="labelForm">Fecha Inicial</label>
+						<input type="text" name="initialDate" class="form-control inputForm" disabled value="{{ plan.fecha_ini }}">
+					</div>
+					<div class="col-lg-6 d-inline-block pr-0">
+						<label for="endDate" class="labelForm">Fecha Final</label>
+						<input type="text" name="endDate" class="form-control inputForm" disabled value="{{ plan.fecha_fin }}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="responsables" class="labelForm">Responsables</label>
+					<textarea rows="3" name="responsables" id="responsables" class="form-control inputForm" disabled="">{{ plan.responsable }}</textarea>
+				</div>
+				<small *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN' || identity.user_alias==plan.usuario_reg" class="valid-feedback d-block">Si desea editar el Plan de Mejoramiento siga el siguiente <a [routerLink]="['/editar/plan/', plan.id]">enlace</a></small>
+			</form>
+		</div>
+		<div class="col col-sm-12 col-md-12 col-lg-12 col-xl-12 marginForm mt-3 border_top">
+			<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status=='error' && errorCode1">
+				{{errorMessage1}}
+			</div>
+			<div id="preloaderOndas" *ngIf="!opportunities && !errorCode1">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div style="padding: 1.2rem;" *ngIf="!errorCode1 && opportunities">
+				<div class="paginationControls" *ngIf="opportunities.length > 20">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+				<div class="titletable">
+					{{ page_title2 }}
+				</div>
+				<table class="table table-bordered m-0">
+					<thead class="thead_styles">
+						<tr>
+							<th>ID</th>
+							<th>Oportunidad de Mejora</th>
+							<th [ngStyle]="{'width': identity.role=='ROLE_USER_2' ? '25%' : '17%'}">Primera Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="17%">Segunda Linea de Defensa</th>
+							<th *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'" width="17%">Tercera Linea de Defensa</th>
+							<th width="10%">Acciones</th>
+						</tr>
+					</thead>
+					<tbody class="tbody_styles">
+						<tr *ngFor="let opportunity of opportunities | paginate: {itemsPerPage: itemsPerPage, currentPage: actualPage}">
+							<td><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">{{ opportunity.id }}</a></td>
+							<td><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">{{ opportunity.oportunidad_mejora }}</a></td>
+							<td><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">
+								<div class="first">
+									<div *ngIf="!opportunity.cum_pri_linea" [ngStyle]="{'width.%':0}" class="second"></div>
+									<div *ngIf="opportunity.cum_pri_linea" [ngStyle]="{'width.%':opportunity.cum_pri_linea}" [ngClass]="{'bad': opportunity.cum_pri_linea<30, 'middle': opportunity.cum_pri_linea>29 && opportunity.cum_pri_linea<70}" class="second"></div>
+								</div>
+							</a></td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">
+								<div class="first">
+									<div *ngIf="!opportunity.cum_seg_linea" [ngStyle]="{'width.%':0}" class="second"></div>
+									<div *ngIf="opportunity.cum_seg_linea" [ngStyle]="{'width.%':opportunity.cum_seg_linea}" [ngClass]="{'bad': opportunity.cum_seg_linea<30, 'middle': opportunity.cum_seg_linea>29 && opportunity.cum_seg_linea<70}" class="second"></div>
+								</div>
+							</a></td>
+							<td *ngIf="identity.role=='ROLE_ADMIN' || identity.role=='ROLE_SUPER_ADMIN'"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">
+								<div class="first">
+									<div *ngIf="!opportunity.cum_ter_linea" [ngStyle]="{'width.%':0}" class="second"></div>
+									<div *ngIf="opportunity.cum_ter_linea" [ngStyle]="{'width.%':opportunity.cum_ter_linea}" [ngClass]="{'bad': opportunity.cum_ter_linea<30, 'middle': opportunity.cum_ter_linea>29 && opportunity.cum_ter_linea<70}" class="second"></div>
+								</div>
+							</a></td>
+							<td style="padding: 0.55rem">
+								<button *ngIf="identity.role=='ROLE_SUPER_ADMIN'" type="button" class="btn btn-danger d-inline-block" data-toggle="modal" [attr.data-target]="'#myModal'+opportunity.id">Borrar</button>
+
+								<button *ngIf="estado=='cerrados'" style="margin-left: 0.3rem;" type="button" class="btn btn-warning d-inline-block" data-toggle="modal" [attr.data-target]="'#myModalClose'+opportunity.id">Abrir</button>
+								<button *ngIf="estado=='abiertos' && opportunity.cum_pri_linea==100 && opportunity.cum_seg_linea==100 && opportunity.cum_ter_linea==100" style="margin-left: 0.3rem;" type="button" class="btn btn-warning d-inline-block" data-toggle="modal" [attr.data-target]="'#myModalClose'+opportunity.id">Cerrar</button>
+							</td>
+							<!-- The Modal -->
+							<div class="modal" id="{{ 'myModal'+opportunity.id }}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+
+										<!-- Modal Header -->
+								    	<div class="modal-header">
+								    		<h4 class="modal-title">Borrar la Oportunidad de Mejoramiento Definitivamente</h4>
+								    		<button type="button" class="close" data-dismiss="modal">&times;</button>
+								    	</div>
+
+										<!-- Modal body -->
+										<div *ngIf="opportunity.actions.length==0" class="modal-body">
+											Seguro que quiere borrar la Oportunidad de Mejoramiento: <b>{{ opportunity.oportunidad_mejora }}</b>? Esta acción no se puede revertir.
+										</div>										
+										<div *ngIf="opportunity.actions.length>0" class="modal-body">
+											La Oportunidad de Mejoramiento <b>{{ opportunity.oportunidad_mejora }}</b> tiene {{opportunity.actions.length}} Acciones de Mejora asociadas. Debe eliminarlas para poder continuar.
+										</div>
+
+										<!-- Modal footer -->
+										<div class="modal-footer">
+											<a *ngIf="opportunity.actions.length==0" (click)="deleteOpportunity(opportunity.id)" class="btn_delete" data-dismiss="modal">Borrar</a>
+											<button type="button" class="btn_close" data-dismiss="modal">Close</button>
+										</div>
+
+									</div>
+								</div>
+							</div>
+							<!-- The Modal -->
+							<div class="modal" id="{{ 'myModalClose'+opportunity.id }}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+
+										<!-- Modal Header -->
+								    	<div class="modal-header">
+								    		<h4 *ngIf="estado=='cerrados'" class="modal-title">Abrir la Oportunidad de Mejoramiento</h4>
+								    		<h4 *ngIf="estado=='abiertos'" class="modal-title">Cerrar la Oportunidad de Mejoramiento</h4>
+								    		<button type="button" class="close" data-dismiss="modal">&times;</button>
+								    	</div>
+
+										<!-- Modal body -->
+										<div *ngIf="estado=='cerrados'" class="modal-body">
+											Seguro que desea abrir la Oportunidad de Mejoramiento: <b>{{ opportunity.oportunidad_mejora }}</b>?
+										</div>
+										<div *ngIf="estado=='abiertos'" class="modal-body">
+											Seguro que desea cerrar la Oportunidad de Mejoramiento: <b>{{ opportunity.oportunidad_mejora }}</b>?
+										</div>
+
+										<!-- Modal footer -->
+										<div class="modal-footer">
+											<a *ngIf="estado=='cerrados'" (click)="chageToOpenStatus(opportunity.id)" class="btn_warning" data-dismiss="modal">Abrir Oportunidad</a>
+											<a *ngIf="estado=='abiertos'" (click)="chageToCloseStatus(opportunity.id)" class="btn_warning" data-dismiss="modal">Cerrar Oportunidad</a>
+											<button type="button" class="btn_close" data-dismiss="modal">Close</button>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</tr>
+					</tbody>
+				</table>			
+				<div class="paginationControls mt-3" *ngIf="opportunities.length > 20">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

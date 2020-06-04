@@ -1,0 +1,114 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-11 col-lg-10 col-xl- marginForm border_bottom">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">
+				<h3 class="centerTitle" *ngIf="estado=='abiertos'">{{ page_title1 }}</h3>
+				<h3 class="centerTitle" *ngIf="estado=='cerrados'">{{ page_title2 }}</h3>
+				<form class="ml-0 pd-0 mt-3" #improvementOpportunitySearchForm="ngForm" (ngSubmit)="onSubmit(improvementOpportunitySearchForm)">
+					<div class="form-group col-lg-4 m-auto">
+						<label for="searchCriteria" class="labelForm">Criterio de Busqueda</label>
+						<select name="searchCriteria" #searchCriteria="ngModel" [(ngModel)]="searchBy" class="form-control inputForm" required>
+							<option selected="true" value="id">ID</option>							
+							<option selected="true" value="word">Ingresar una Palabra</option>	
+							<option selected="true" value="process">Proceso Responsable</option>							
+							<option selected="true" value="todos">Mostrar Todos los Planes</option>
+						</select>
+					</div>
+					<div class="form-group col-lg-6 pt-3 m-auto" style="text-align: center;" *ngIf="searchBy">
+						<div class="col-lg-9 d-inline-block pl-0" *ngIf="searchBy=='id'">
+							<input type="text" placeholder="Ingrese el ID de la Oportunidad de Mejora" name="idOpportunity" class="form-control inputForm"[ngClass]="{'is-invalid':idOpportunity.invalid && idOpportunity.touched}" #idOpportunity="ngModel" [(ngModel)]="inputPlan" required pattern="[0-9]+">							
+						</div>
+						<div class="col-lg-9 d-inline-block pl-0" *ngIf="searchBy=='word'">
+							<input type="text" placeholder="Ingrese una palabra contenida en el Plan" name="planWord" class="form-control inputForm" [ngClass]="{'is-invalid':planWord.invalid && planWord.touched}" #planWord="ngModel" [(ngModel)]="inputWordPlan" required>		
+						</div>
+						<div class="col-lg-9 d-inline-block pl-0" *ngIf="searchBy=='process'">
+							<select name="responsable" class="form-control inputForm" [ngClass]="{'is-invalid':responsable.invalid && responsable.touched}" #responsable="ngModel" [(ngModel)]="inputProcess" required>
+								<option *ngFor="let manager of managerChecklist" value="{{manager.value}}">{{manager.text}}</option>
+							</select>
+						</div>
+						<div class="col-lg-3 d-inline-block p-0 .align-bottom m-auto">
+							<div class="buttonSubmit">
+								<button type="submit" class="btn btn-success fa fa-search" [disabled]="improvementOpportunitySearchForm.invalid">
+								</button>								
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="col col-sm-12 col-md-11 col-lg-10 col-xl- marginForm mt-3 border_top">
+			<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status=='error' && errorCode">
+				{{errorMessage}}
+			</div>
+			<div class="col-lg-8 alert alert-danger wd-100" style="margin: auto;" *ngIf="status=='success' && opportunityStatus=='1'">
+				La Oportunidad de Mejora del plan {{opportunity.plans.nom_plan}} se encuentra abierta. Puede consultarla <a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">acá</a>
+			</div>
+			<div class="col-lg-8 alert alert-danger wd-100" style="margin: auto;" *ngIf="status=='success' && opportunityStatus=='2'">
+				La Oportunidad de Mejora del plan {{opportunity.plans.nom_plan}} se encuentra cerrada. Puede consultarla <a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">acá</a>
+			</div>
+			<div class="col-lg-8 alert alert-danger wd-100" style="margin: auto;" *ngIf="status=='success' && opportunityStatus=='0'">
+				La Oportunidad de Mejora está homologada. Puede consultarla <a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">acá</a>
+			</div>
+			<div id="preloaderOndas" *ngIf="!plans && !opportunity && !errorCode">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div style="padding: 1.2rem;" *ngIf="!errorCode && plans || (opportunity && !opportunityStatus)">
+				<div class="paginationControls" *ngIf="(plans && plans.length > 20) || (opportunity && opportunity.length > 20)">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+				<table class="table table-bordered m-0">
+					<thead class="thead_styles">
+						<tr>
+							<th *ngIf="panelShow==0">ID</th>
+							<th *ngIf="panelShow==1 || panelShow==2">ID Oportunidad de Mejora</th>
+							<th>Nombre del Plan</th>
+						</tr>
+					</thead>
+					<tbody class="tbody_styles" *ngIf="plans && panelShow==0">
+						<tr *ngFor="let plan of plans | paginate: {itemsPerPage: itemsPerPage, currentPage: actualPage}">
+							<td *ngIf="estado=='abiertos'" width="30%"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/abiertos/plan', plan.id]">{{ plan.id }}</a></td>
+							<td *ngIf="estado=='abiertos'"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/abiertos/plan', plan.id]">{{ plan.nom_plan }}</a></td>
+							<td *ngIf="estado=='cerrados'" width="30%"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/cerrados/plan', plan.id]">{{ plan.id }}</a></td>
+							<td *ngIf="estado=='cerrados'"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/cerrados/plan', plan.id]">{{ plan.nom_plan }}</a></td>
+						</tr>
+					</tbody>
+					<tbody class="tbody_styles" *ngIf="opportunity && opportunity.plans && panelShow==1">
+						<tr>
+							<td width="30%"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">{{ opportunity.id }}</a></td>
+							<td><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opportunity.id]">{{ opportunity.plans.nom_plan }}</a></td>
+						</tr>
+					</tbody>
+					<tbody class="tbody_styles" *ngIf="opportunity && panelShow==2">
+						<tr *ngFor="let opp of opportunity | paginate: {itemsPerPage: itemsPerPage, currentPage: actualPage}">
+							<td width="30%"><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opp.id]">{{ opp.id }}</a></td>
+							<td><a [routerLink]="['/oportunidad-mejora/seguimiento-planes/acciones/', opp.id]">{{ opp.plans.nom_plan }}</a></td>
+						</tr>
+					</tbody>
+				</table>				
+				<div class="paginationControls mt-3" *ngIf="(plans && plans.length > 20) || (opportunity && opportunity.length > 20)">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

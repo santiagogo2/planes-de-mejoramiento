@@ -1,0 +1,97 @@
+<div class="container-fluid">
+	<div class="row justify-content-center align-items-center mt-3">
+		<div class="col col-sm-12 col-md-11 col-lg-10 col-xl- marginForm" [ngClass]="{'border_bottom': opportunity || errorCode}">
+			<div class="linkContent">
+				<div class="backLink">
+					<a href="javascript:window.history.back();">Regresar</a>
+				</div>
+				<div class="homeLink">
+					<a [routerLink]="['/inicio']">Home</a>
+				</div>
+			</div>
+			<div class="formContainer">
+				<h3 class="centerTitle">{{ page_title1 }}</h3>
+				<form class="ml-0 pd-0 mt-3" #actionSearchForm="ngForm" (ngSubmit)="onSubmit()">
+					<div class="form-group col-lg-4 m-auto">
+						<label for="searchCriteria" class="labelForm">Criterio de Busqueda</label>
+						<select name="searchCriteria" #searchCriteria="ngModel" [(ngModel)]="searchBy" class="form-control inputForm" required>
+							<option selected="true" value="id">ID</option>
+							<option selected="true" value="word">Palabra que contenga la Oportunidad de Mejora</option>	
+						</select>
+					</div>
+					<div class="form-group col-lg-6 pt-3 m-auto" style="text-align: center;" *ngIf="searchBy">
+						<div class="col-lg-9 d-inline-block pl-0" *ngIf="searchBy=='id'">
+							<input type="text" placeholder="Ingrese el ID de la Oportunidad de Mejora" name="idOpportunity" class="form-control inputForm" [ngClass]="{'is-invalid': idOpportunity.invalid && idOpportunity.touched}" #idOpportunity="ngModel" [(ngModel)]="inputPlan" required pattern="[0-9]+">							
+						</div>
+						<div class="col-lg-9 d-inline-block pl-0" *ngIf="searchBy=='word'">
+							<input type="text" placeholder="Ingrese una palabra que contenga la Oportunidad de Mejora" name="opportunityWord" class="form-control inputForm" [ngClass]="{'is-invalid': opportunityWord.invalid && opportunityWord.touched}" #opportunityWord="ngModel" [(ngModel)]="inputPlan" required>							
+						</div>
+						<div class="col-lg-3 d-inline-block p-0 .align-bottom m-auto">
+							<div class="buttonSubmit">
+								<button type="submit" class="btn btn-success fa fa-search" [disabled]="actionSearchForm.invalid">
+								</button>								
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="col col-sm-12 col-md-11 col-lg-10 col-xl- marginForm mt-3 border_top" *ngIf="errorCode || opportunity">
+			<div class="col-lg-8 alert alert-danger wd-100 text-center" style="margin: auto;" *ngIf="status=='error' && errorCode">
+				{{errorMessage}}
+			</div>
+			<div id="preloaderOndas" *ngIf="!opportunity && !errorCode">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div style="padding: 1.2rem;" *ngIf="!errorCode && opportunity">
+				<div class="paginationControls" *ngIf="opportunity && opportunity.length > 20">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+				<div class="titletable">
+					{{ page_title2 }}
+				</div>
+				<table class="table table-bordered m-0">
+					<thead class="thead_styles">
+						<tr>
+							<th width="8%">ID</th>
+							<th width="25%">Plan de Mejoramiento</th>
+							<th>Nombre de la Oportunidad de Mejoramiento</th>
+							<th width="20%">Responsable</th>
+						</tr>
+					</thead>
+					<tbody class="tbody_styles" *ngIf="searchType==1">
+						<tr>
+							<td><a [routerLink]="['/registrar/accion-mejora', opportunity.id]">{{ opportunity.id }}</a></td>
+							<td><a [routerLink]="['/registrar/accion-mejora', opportunity.id]">{{ opportunity.plans.nom_plan }}</a></td>
+							<td><a [routerLink]="['/registrar/accion-mejora', opportunity.id]">{{ opportunity.oportunidad_mejora }}</a></td>
+							<td><a [routerLink]="['/registrar/accion-mejora', opportunity.id]">{{ opportunity.proceso }}</a></td>
+						</tr>
+					</tbody>
+					<tbody class="tbody_styles" *ngIf="searchType==2">
+						<tr *ngFor="let opp of opportunity | paginate: {itemsPerPage: itemsPerPage, currentPage: actualPage}">
+							<td><a [routerLink]="['/registrar/accion-mejora', opp.id]">{{ opp.id }}</a></td>
+							<td><a [routerLink]="['/registrar/accion-mejora', opp.id]">{{ opp.plans.nom_plan }}</a></td>
+							<td><a [routerLink]="['/registrar/accion-mejora', opp.id]">{{ opp.oportunidad_mejora }}</a></td>
+							<td><a [routerLink]="['/registrar/accion-mejora', opp.id]">{{ opp.proceso }}</a></td>
+						</tr>
+					</tbody>
+				</table>				
+				<div class="paginationControls mt-3" *ngIf="opportunity && opportunity.length > 20">
+					<pagination-controls (pageChange)="pageChange($event)"
+										 previousLabel="Anterior"
+										 nextLabel="Siguiente"
+										 maxSize="4">
+					</pagination-controls>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

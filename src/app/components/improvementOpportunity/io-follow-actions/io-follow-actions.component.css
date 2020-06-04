@@ -1,0 +1,68 @@
+.formPlan{
+	padding: 0 1.2rem;
+}
+.form-group{
+	margin-bottom: 0.5rem !important;
+}
+
+.first{
+	margin: 1rem 1.2rem;
+	height: 30px;
+	widows: 100%;
+	background-color: #DDD;
+	border-radius: 5px;
+	position: relative;
+}
+.first span{
+	font-weight: 700;
+	position: absolute;
+	bottom: 0.3rem;
+}
+.second{
+	height: 30px;
+	background-color: #009200;
+	border-radius: 5px;
+}
+.table td{
+	padding: 0.55rem !important;
+}
+.table td a img{
+	width: 40%;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+.table td a:hover img{
+	filter: opacity(.7);
+}
+.table tbody tr:hover a{
+	color: #212529 !important;
+}
+.table tbody tr:hover{
+	background-color: inherit; 
+}
+.tbody_styles tr:nth-child(even):hover {
+    background-color: #F1F1F1 !important;
+}
+.bad{
+	background-color: #D23C4A;	
+}
+.middle{
+	background-color: #FFC107;	
+}
+#accordion .titletable{
+	padding: 0;
+}
+#accordion .titletable button::after{
+	content: "\25BE";
+}
+#accordion .titletable button{
+	width: 100%;
+	color: inherit;
+	font-weight: inherit;
+}
+.close{
+	border-radius: unset;
+}
